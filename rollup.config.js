@@ -1,5 +1,4 @@
 import nodeResolve from 'rollup-plugin-node-resolve';
-import buble from 'rollup-plugin-buble';
 
 const pkg = require('./package.json');
 const external = Object.keys( pkg.dependencies );
@@ -10,6 +9,6 @@ export default {
         { dest: pkg.main, format: 'cjs' },
         { dest: pkg.module, format: 'es' }
     ],
-    plugins: [nodeResolve(), buble()],
+    plugins: [nodeResolve()],
     external: external,
 };

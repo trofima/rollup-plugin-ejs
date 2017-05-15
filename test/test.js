@@ -6,10 +6,10 @@ import ejs from '..';
 process.chdir(__dirname);
 
 describe( 'rollup-plugin-ejs', () => {
-    function createBundle() {
+    function createBundle(sampleFileName = 'main', pluginSettings) {
         return rollup({
-            entry: 'samples/main.js',
-            plugins: [ejs()]
+            entry: `samples/${sampleFileName}.js`,
+            plugins: [ejs(pluginSettings)]
         })
     }
 
@@ -33,6 +33,13 @@ describe( 'rollup-plugin-ejs', () => {
 
     it('should convert ejs to tpl function retuning parsed html string', async () => {
         const bundle = await createBundle();
+        const tplFn = getTplFnFrom(bundle);
+
+        expect(tplFn({test: 'test'})).to.be.equal('<div>test</div>');
+    });
+
+    it('should support any file extension with proper ejs content', async () => {
+        const bundle = await createBundle('html', {include: ['**/*.html']});
         const tplFn = getTplFnFrom(bundle);
 
         expect(tplFn({test: 'test'})).to.be.equal('<div>test</div>');

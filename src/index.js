@@ -2,10 +2,7 @@ import {createFilter} from 'rollup-pluginutils';
 import {compile} from 'ejs';
 
 export default function({include, exclude, compilerOptions} = {}) {
-    if (include)
-        throw Error('include option should be specified');
-
-    const filter = createFilter(include || [ '**/*.ejs'], exclude);
+    const filter = createFilter(include || ['**/*.ejs'], exclude);
 
     const compilerOpts = Object.assign({}, {
         client: true,
