@@ -30,7 +30,7 @@ rollup({
         ejs({
             include: ['**/*.ejs', '**/*.html'], // optional, '**/*.ejs' by default
             exclude: ['**/index.html'], // optional, undefined by default
-            compilerOpts: {client: true} // optional, any options supported by ejs compiler
+            compilerOptions: {client: true} // optional, any options supported by ejs compiler
         })
     ]
 });
