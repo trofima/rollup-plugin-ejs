@@ -54,11 +54,11 @@ tpl.ejs
 
 ## Advanced options
 
-It might be useful first of for those are using [webcomponents.js](https://github.com/webcomponents/webcomponentsjs).
-By the webcomponents spec v1 you can use <link rel="stylesheet" href="..."> tags in your shadow dom to load styles. 
+It might be useful first of all for those are using [webcomponents.js](https://github.com/webcomponents/webcomponentsjs).
+By the webcomponents spec v1 you can use ```<link rel="stylesheet" href="...">``` tags in your shadow dom to load styles. 
 But unfortunately only chrome by now (May 2017) supports this.
 [ShadyCSS](https://github.com/webcomponents/shadycss) doesn't help here, because it works only for <style>...</style> tags in your shadow dom.
-So for ShadyCSS to process your styles loaded by link tags you have to replace <link> tags with <style> containing css rules from linked css file.
+So for ShadyCSS to process your styles loaded by link tags you have to replace ```<link>``` tags with ```<style>``` tags containing css rules from linked css file.
 To achieve this on loading a template ejs/html file you can use this plugin:
 
 rollup.config.js
@@ -106,10 +106,10 @@ The resulted compiled template string will look like this:
 <slot></slot>
 ```
 
-Now ShadyCSS will be able to process the html content in a right way.
+Now ShadyCSS is able to process the html content in a right way.
 
-It will (should at least ;) work for multiple <link> tags. 
-And also it should work even for <template> tags containing <link> tags.
+It will (should at least ;) work for multiple ```<link>``` tags. 
+And also it should work even for ```<template>``` tags containing ```<link>``` tags.
 
 
 Enjoy. And fill free to pull request.
