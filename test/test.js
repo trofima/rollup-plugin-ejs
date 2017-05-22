@@ -52,22 +52,23 @@ describe( 'rollup-plugin-ejs', () => {
             return str.replace(/\s/g, '');
         }
 
-        it('should replace link[rel="stylesheet"] tag to style tag', async() => {
+        it('should replace link[rel="stylesheet"] without href to empty string', async() => {
             const bundle = await createBundle('cssLoading/oneLinkTag', {loadCss: true});
             const tplFn = getTplFnFrom(bundle);
 
-            expect(tplFn()).to.be.equal('<style></style>');
+            expect(removeSpacesFrom(tplFn({test: 'test_value'})))
+                .to.be.equal('<div>test_value</div>');
         });
 
-        it('should replace multiple link[rel="stylesheet"] tags to style tags', async() => {
+        it('should replace multiple link[rel="stylesheet"] without href to empty string', async() => {
             const bundle = await createBundle('cssLoading/multipleLinkTags', {loadCss: true});
             const tplFn = getTplFnFrom(bundle);
 
-            expect(removeSpacesFrom(tplFn()))
-                .to.be.equal('<style></style><style></style>');
+            expect(removeSpacesFrom(tplFn({test: 'test_value'})))
+                .to.be.equal('<div>test_value</div>');
         });
 
-        it('should load css rules from linked css files to style tags', async() => {
+        it('should load css rules from linked css file to style tag', async() => {
             const bundle = await createBundle('cssLoading/loadCssRules', {loadCss: true});
             const tplFn = getTplFnFrom(bundle);
 
@@ -75,30 +76,14 @@ describe( 'rollup-plugin-ejs', () => {
                 .to.be.equal('<style>*{border:0;}a{text-decoration:none;}</style>');
         });
 
-        it('should replace link[rel="stylesheet"] tags to style tags found in template tag', async() => {
-            const bundle = await createBundle('cssLoading/oneTemplate', {loadCss: true});
+        it('should load css rules from multiple linked css files to style tags', async() => {
+            const bundle = await createBundle('cssLoading/loadMultipleCssRules', {loadCss: true});
             const tplFn = getTplFnFrom(bundle);
 
             expect(removeSpacesFrom(tplFn()))
                 .to.be.equal(removeSpacesFrom(`
-                    <template>
-                        <style>*{border:0;}a{text-decoration:none;}</style>
-                    </template>
-                `));
-        });
-
-        it('should replace link[rel="stylesheet"] tags to style tags found in multiple template tags', async() => {
-            const bundle = await createBundle('cssLoading/multipleTemplates', {loadCss: true});
-            const tplFn = getTplFnFrom(bundle);
-
-            expect(removeSpacesFrom(tplFn()))
-                .to.be.equal(removeSpacesFrom(`
-                    <template>
-                        <style>*{border:0;}a{text-decoration:none;}</style>
-                    </template>
-                    <template>
-                        <style>*{border:0;}a{text-decoration:none;}</style>
-                    </template>
+                    <style>*{border:0;}a{text-decoration:none;}</style>
+                    <style>:host{display: block;}</style>
                 `));
         });
     });

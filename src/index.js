@@ -1,51 +1,19 @@
 import {createFilter} from 'rollup-pluginutils';
 import {compile} from 'ejs';
-import {JSDOM} from 'jsdom';
 import fs from 'fs';
 import path from 'path';
 
-function createStyleTagFrom(link, tplFilePath) {
-    const cssRelativePath = link.getAttribute('href');
-    const style = JSDOM.fragment(`<style></style>`);
-
-    if (cssRelativePath) {
-        const cssPath = path.resolve(path.parse(tplFilePath).dir, cssRelativePath);
-
-        style.firstChild.textContent = fs.readFileSync(cssPath, 'utf8');
-    }
-
-    return style;
-}
-
-function createTemplateFrom(templateContent, tplFilePath) {
-    const newTemplateContent = replaceLinksWithStylesIn(templateContent, tplFilePath);
-    const newTemplate = JSDOM.fragment('<template></template>').firstChild;
-
-    newTemplate.content.appendChild(newTemplateContent);
-
-    return newTemplate;
-}
-
-function replaceLinksWithStylesIn(dom, tplFilePath) {
-    const newDom = dom.cloneNode(true);
-    const links = newDom.querySelectorAll('link[rel="stylesheet"]');
-    const templates = newDom.querySelectorAll('template');
-
-    links.forEach(link =>
-        newDom.replaceChild(createStyleTagFrom(link, tplFilePath), link));
-    templates.forEach(template =>
-        newDom.replaceChild(createTemplateFrom(template.content, tplFilePath), template));
-
-    return newDom;
+function getCssFilePath(tplFilePath, href) {
+    return path.resolve(path.parse(tplFilePath).dir, href);
 }
 
 function loadCssStylesTo(code, tplFilePath) {
-    const wrapper = JSDOM.fragment('<div></div>').children[0];
-    const newDom = replaceLinksWithStylesIn(JSDOM.fragment(code), tplFilePath);
+    const linkTagRegEx = /<link(?=.*\shref=['|"]([\w$-_.+!*'(),]*)['|"])(?=.*\srel=['|"]stylesheet['|"]).*>/g;
 
-    wrapper.appendChild(newDom);
-
-    return wrapper.innerHTML.trim();
+    return code.replace(linkTagRegEx, (match, href) =>
+        href
+            ? `<style>${fs.readFileSync(getCssFilePath(tplFilePath, href), 'utf8')}</style>`
+            : '');
 }
 
 export default function({
@@ -53,7 +21,7 @@ export default function({
                             exclude,
                             loadCss,
                             compilerOptions = {client: true, strict: true}
-} = {}) {
+                        } = {}) {
     const filter = createFilter(include || ['**/*.ejs'], exclude);
 
     return {
