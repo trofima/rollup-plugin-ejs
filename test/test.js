@@ -24,6 +24,11 @@ describe( 'rollup-plugin-ejs', () => {
         return module.exports;
     }
 
+    function getStringFrom(bundle) {
+        const generated = bundle.generate({format: 'cjs'});
+        return generated.code;
+    }
+
     describe('common', () => {
         it('should convert ejs to tpl function', async () => {
             const bundle = await createBundle();
@@ -32,7 +37,7 @@ describe( 'rollup-plugin-ejs', () => {
             expect(tplFn).to.be.a('function');
         });
 
-        it('should convert ejs to tpl function retuning parsed html string', async () => {
+        it('should convert ejs to tpl function returning parsed html string', async () => {
             const bundle = await createBundle();
             const tplFn = getTplFnFrom(bundle);
 
@@ -85,6 +90,35 @@ describe( 'rollup-plugin-ejs', () => {
                     <style>*{border:0;}a{text-decoration:none;}</style>
                     <style>:host{display: block;}</style>
                 `));
+        });
+    });
+
+    describe('compiling', () => {
+
+        it('should convert ejs to string', async () => {
+            var compileSettings = {
+                compilerOptions: { client: false },
+                data: {locals: {test: 'test'}}
+            };
+            //debugger;
+            const bundle = await createBundle('main', compileSettings);
+            const tplFn = getStringFrom(bundle);
+
+            expect(tplFn).to.be.a('string');
+        });
+
+        it('should convert ejs to tpl function returning parsed html string', async () => {
+            const bundle = await createBundle();
+            const tplFn = getTplFnFrom(bundle);
+
+            expect(tplFn({test: 'test'})).to.be.equal('<div>test</div>');
+        });
+
+        it('should support any file extension with proper ejs content', async () => {
+            const bundle = await createBundle('html', {include: ['**/*.html']});
+            const tplFn = getTplFnFrom(bundle);
+
+            expect(tplFn({test: 'test'})).to.be.equal('<div>test</div>');
         });
     });
 });

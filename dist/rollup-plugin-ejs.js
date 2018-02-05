@@ -1,8 +1,12 @@
-import {createFilter} from 'rollup-pluginutils';
-import {compile} from 'ejs';
-import fs from 'fs';
-import path from 'path';
-import { minify } from 'html-minifier';
+'use strict';
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var rollupPluginutils = require('rollup-pluginutils');
+var ejs = require('ejs');
+var fs = _interopDefault(require('fs'));
+var path = _interopDefault(require('path'));
+var htmlMinifier = require('html-minifier');
 
 function getCssFilePath(tplFilePath, href) {
     return path.resolve(path.parse(tplFilePath).dir, href);
@@ -17,7 +21,7 @@ function loadCssStylesTo(code, tplFilePath) {
             : '');
 }
 
-export default function({
+var index = function({
                             include,
                             exclude,
                             loadCss,
@@ -25,7 +29,7 @@ export default function({
                             data,
                             htmlMinifierOptions
                         } = {}) {
-    const filter = createFilter(include || ['**/*.ejs'], exclude);
+    const filter = rollupPluginutils.createFilter(include || ['**/*.ejs'], exclude);
 
     return {
         name: 'ejs',
@@ -33,9 +37,9 @@ export default function({
         transform: function transform(code, tplFilePath) {
             if (filter(tplFilePath)) {
                 const codeToCompile = loadCss ? loadCssStylesTo(code, tplFilePath) : code;
-                const templateFn = compile(codeToCompile, compilerOptions);
+                const templateFn = ejs.compile(codeToCompile, compilerOptions);
                 if(data) {
-                    code = JSON.stringify(minify(templateFn(data), htmlMinifierOptions));
+                    code = JSON.stringify(htmlMinifier.minify(templateFn(data), htmlMinifierOptions));
                 } else {
                     code = templateFn.toString();
                 }
@@ -47,4 +51,6 @@ export default function({
             }
         }
     };
-}
+};
+
+module.exports = index;

@@ -1,5 +1,5 @@
-import {createFilter} from 'rollup-pluginutils';
-import {compile} from 'ejs';
+import { createFilter } from 'rollup-pluginutils';
+import { compile } from 'ejs';
 import fs from 'fs';
 import path from 'path';
 import { minify } from 'html-minifier';
@@ -17,7 +17,7 @@ function loadCssStylesTo(code, tplFilePath) {
             : '');
 }
 
-export default function({
+var index = function({
                             include,
                             exclude,
                             loadCss,
@@ -47,4 +47,6 @@ export default function({
             }
         }
     };
-}
+};
+
+export default index;
