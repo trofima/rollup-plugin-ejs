@@ -2,7 +2,7 @@ import {createFilter} from 'rollup-pluginutils';
 import {compile} from 'ejs';
 import fs from 'fs';
 import path from 'path';
-import { minify } from 'html-minifier';
+import {minify} from 'html-minifier';
 
 function getCssFilePath(tplFilePath, href) {
     return path.resolve(path.parse(tplFilePath).dir, href);

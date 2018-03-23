@@ -94,31 +94,31 @@ describe( 'rollup-plugin-ejs', () => {
     });
 
     describe('compiling', () => {
+        const compileSettings = {
+            compilerOptions: { client: false },
+            data: {locals: {test: 'test'}}
+        };
 
         it('should convert ejs to string', async () => {
-            var compileSettings = {
-                compilerOptions: { client: false },
-                data: {locals: {test: 'test'}}
-            };
-            //debugger;
             const bundle = await createBundle('main', compileSettings);
-            const tplFn = getStringFrom(bundle);
+            const compiledTpl = getStringFrom(bundle);
 
-            expect(tplFn).to.be.a('string');
+            expect(compiledTpl).to.be.a('string');
         });
 
         it('should convert ejs to tpl function returning parsed html string', async () => {
-            const bundle = await createBundle();
-            const tplFn = getTplFnFrom(bundle);
+            const bundle = await createBundle('main', compileSettings);
+            const compiledTpl = getTplFnFrom(bundle);
 
-            expect(tplFn({test: 'test'})).to.be.equal('<div>test</div>');
+            expect(compiledTpl).to.be.equal('<div>test</div>');
         });
 
         it('should support any file extension with proper ejs content', async () => {
-            const bundle = await createBundle('html', {include: ['**/*.html']});
-            const tplFn = getTplFnFrom(bundle);
+            const includeSettings = Object.assign({}, compileSettings, {include: ['**/*.html']})
+            const bundle = await createBundle('html', includeSettings);
+            const compiledTpl = getTplFnFrom(bundle);
 
-            expect(tplFn({test: 'test'})).to.be.equal('<div>test</div>');
+            expect(compiledTpl).to.be.equal('<div>test</div>');
         });
     });
 });

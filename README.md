@@ -52,10 +52,35 @@ tpl.ejs
 <p><%= locals.text %></p>
 ```
 
+### Compiling your template in Node
+Passing in a data object will result in ejs rendering your template and returning a string.
+
+rollup.config.js
+```javascript
+import { rollup } from 'rollup';
+import ejs from 'rollup-plugin-ejs';
+
+rollup({
+    entry: 'main.js',
+    plugins: [
+        ejs({
+            include: ['**/*.ejs', '**/*.html'], // optional, '**/*.ejs' by default
+            compilerOptions: {client: false, filename: 'src/template.ejs.html'}, // See [ejs.compile](https://github.com/mde/ejs#usage) for more options
+            data: templateData, // Your data object for your template
+            htmlMinifierOptions: { // See [html-minifier](https://github.com/kangax/html-minifier) for all options
+                ignoreCustomFragments: [/<!--#[\s\S]*?-->/],
+                collapseWhitespace: true,
+                removeAttributeQuotes: true
+            }
+        })
+    ]
+});
+```
+
 ## Advanced options
 
 It might be useful first of all for those are using [webcomponents.js](https://github.com/webcomponents/webcomponentsjs).
-By the webcomponents spec v1 you can use ```<link rel="stylesheet" href="...">``` tags in your shadow dom to load styles. 
+By the webcomponents spec v1 you can use ```<link rel="stylesheet" href="...">``` tags in your shadow dom to load styles.
 But unfortunately only chrome by now (May 2017) supports this.
 [ShadyCSS](https://github.com/webcomponents/shadycss) doesn't help here, because it works only for <style>...</style> tags in your shadow dom.
 So for ShadyCSS to process your styles loaded by link tags you have to replace ```<link>``` tags with ```<style>``` tags containing css rules from linked css file.
@@ -108,7 +133,7 @@ The resulted compiled template string will look like this:
 
 Now ShadyCSS is able to process the html content in a right way.
 
-It will (should at least ;) work for multiple ```<link>``` tags. 
+It will (should at least ;) work for multiple ```<link>``` tags.
 And also it should work even for ```<template>``` tags containing ```<link>``` tags.
 
 
