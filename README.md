@@ -54,12 +54,16 @@ tpl.ejs
 
 ## Advanced options
 
-It might be useful first of all for those are using [webcomponents.js](https://github.com/webcomponents/webcomponentsjs).
+It might be useful first of all for those are using [webcomponents.js](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs).
 By the webcomponents spec v1 you can use ```<link rel="stylesheet" href="...">``` tags in your shadow dom to load styles. 
-But unfortunately only chrome by now (May 2017) supports this.
-[ShadyCSS](https://github.com/webcomponents/shadycss) doesn't help here, because it works only for <style>...</style> tags in your shadow dom.
+But unfortunately not all browsers support this.
+[ShadyCSS](https://github.com/webcomponents/polyfills/tree/master/packages/shadycss) doesn't help here, because it works only for <style>...</style> tags in your shadow dom.
 So for ShadyCSS to process your styles loaded by link tags you have to replace ```<link>``` tags with ```<style>``` tags containing css rules from linked css file.
 To achieve this on loading a template ejs/html file you can use this plugin:
+
+**Starting from v2 you can also use link to ```.scss``` files instead of ```.css``` directly! ```.scss``` will be compiled on the fly and appended to the ```<style>``` as regular css! So you don't need to compile sass separately anymore.**
+
+_Note: there is a breaking change in v2 ```loadCss``` option renamed to load ```loadStyles```._
 
 rollup.config.js
 ```javascript
@@ -67,19 +71,20 @@ import { rollup } from 'rollup';
 import ejs from 'rollup-plugin-ejs';
 
 rollup({
-    entry: 'main.js',
+  entry: 'main.js',
     plugins: [
-        ejs({
-            include: ['**/*.ejs', '**/*.html'],
-            loadCss: true, // false by default
-        })
-    ]
+      ejs({
+        include: ['**/*.ejs', '**/*.html'],
+        loadStyles: true, // false by default
+      }),
+    ],
 });
 ```
 
 tpl.ejs
 ```html
 <link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="./style1.scss">
 <h1>My custom component</h1>
 <slot></slot>
 ```
@@ -87,8 +92,18 @@ tpl.ejs
 style.css
 ```css
 :host {
-    background: red;
-    display: block;
+  background: red;
+  display: block;
+}
+```
+
+style1.scss
+```scss
+$color-link: #000000;
+
+a {
+  cursor: auto;
+  color: $color-link;
 }
 ```
 
@@ -96,10 +111,16 @@ The resulted compiled template string will look like this:
 
 ```html
 <style>
-    :host {
-        background: red;
-        display: block;
-    }
+  :host {
+    background: red;
+    display: block;
+  }
+</style>
+<style>
+  a {
+    cursor: auto;
+    color: #000000;
+  }
 </style>
 
 <h1>My custom component</h1>
@@ -108,8 +129,8 @@ The resulted compiled template string will look like this:
 
 Now ShadyCSS is able to process the html content in a right way.
 
-It will (should at least ;) work for multiple ```<link>``` tags. 
-And also it should work even for ```<template>``` tags containing ```<link>``` tags.
+It will (should at least ;) work for multiple ```<link>``` tags even if you mix ```.css``` and ```.scss``` files. 
+And also it works even for ```<template>``` tags containing ```<link>``` tags.
 
 
 Enjoy. And fill free to pull request.
