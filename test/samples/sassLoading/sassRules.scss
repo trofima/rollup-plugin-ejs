@@ -1,0 +1,10 @@
+$text-decoration: none;
+$border-size: 0;
+
+* {
+    border: $border-size;
+}
+
+a {
+    text-decoration: $text-decoration;
+}

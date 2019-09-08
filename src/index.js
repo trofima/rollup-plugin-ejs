@@ -2,41 +2,47 @@ import {createFilter} from 'rollup-pluginutils';
 import {compile} from 'ejs';
 import fs from 'fs';
 import path from 'path';
+import sass from 'node-sass';
 
-function getCssFilePath(tplFilePath, href) {
-    return path.resolve(path.parse(tplFilePath).dir, href);
-}
+const linkTagRegEx = /<link(?=.*\shref=['|"]([\w$-_.+!*'(),]*)['|"])(?=.*\srel=['|"]stylesheet['|"]).*>/g;
+const readStyleFile = (tplFilePath, href) => fs.readFileSync(path.resolve(path.parse(tplFilePath).dir, href), 'utf8');
 
-function loadCssStylesTo(code, tplFilePath) {
-    const linkTagRegEx = /<link(?=.*\shref=['|"]([\w$-_.+!*'(),]*)['|"])(?=.*\srel=['|"]stylesheet['|"]).*>/g;
+const compilers = {
+  css: readStyleFile,
+  scss: (tplFilePath, href) => {
+    const compiled = sass.renderSync({
+      data: readStyleFile(tplFilePath, href),
+      importer: (url, prev) => ({file: path.resolve(path.parse(prev === 'stdin' ? tplFilePath : prev).dir, url)}),
+    });
 
-    return code.replace(linkTagRegEx, (match, href) =>
-        href
-            ? `<style>${fs.readFileSync(getCssFilePath(tplFilePath, href), 'utf8')}</style>`
-            : '');
-}
+    return compiled.css.toString('utf8');
+  },
+};
 
-export default function({
-                            include,
-                            exclude,
-                            loadCss,
-                            compilerOptions = {client: true, strict: true}
-                        } = {}) {
-    const filter = createFilter(include || ['**/*.ejs'], exclude);
+const loadStylesTo = (code, tplFilePath) =>
+  code.replace(linkTagRegEx, (match, href) => href
+    ? `<style>${compilers[path.extname(href).substr(1)](tplFilePath, href)}</style>`
+    : '');
 
-    return {
-        name: 'ejs',
+export default ({
+  include, exclude, loadStyles,
+  compilerOptions = {client: true, strict: true},
+} = {}) => {
+  const filter = createFilter(include || ['**/*.ejs'], exclude);
 
-        transform: function transform(code, tplFilePath) {
-            if (filter(tplFilePath)) {
-                const codeToCompile = loadCss ? loadCssStylesTo(code, tplFilePath) : code;
-                const templateFn = compile(codeToCompile, compilerOptions);
+  return {
+    name: 'ejs',
 
-                return {
-                    code: `export default ${templateFn.toString()};`,
-                    map: {mappings: ''},
-                };
-            }
-        }
-    };
+    transform: function transform(code, tplFilePath) {
+      if (filter(tplFilePath)) {
+        const codeToCompile = loadStyles ? loadStylesTo(code, tplFilePath) : code;
+        const templateFn = compile(codeToCompile, compilerOptions);
+
+        return {
+          code: `export default ${templateFn.toString()};`,
+          map: {mappings: ''},
+        };
+      }
+    },
+  };
 }
