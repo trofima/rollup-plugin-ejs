@@ -1,14 +1,14 @@
 import nodeResolve from 'rollup-plugin-node-resolve';
 
 const pkg = require('./package.json');
-const external = Object.keys( pkg.dependencies );
+const external = Object.keys(pkg.dependencies);
 
 export default {
-    entry: 'src/index.js',
-    targets: [
-        { dest: pkg.main, format: 'cjs' },
-        { dest: pkg.module, format: 'es' }
-    ],
-    plugins: [nodeResolve()],
-    external: external,
+  input: 'src/index.js',
+  output: [
+    {file: pkg.main, format: 'cjs'},
+    {file: pkg.module, format: 'es'},
+  ],
+  plugins: [nodeResolve()],
+  external: external,
 };
