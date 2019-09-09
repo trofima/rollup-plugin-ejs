@@ -6,6 +6,7 @@ import sass from 'node-sass';
 
 const linkTagRegEx = /<link(?=.*\shref=['|"]([\w$-_.+!*'(),]*)['|"])(?=.*\srel=['|"]stylesheet['|"]).*>/g;
 const readStyleFile = (tplFilePath, href) => fs.readFileSync(path.resolve(path.parse(tplFilePath).dir, href), 'utf8');
+const defaultCompilerOptions = {client: true, strict: true};
 
 const compilers = {
   css: readStyleFile,
@@ -26,7 +27,7 @@ const loadStylesTo = (code, tplFilePath) =>
 
 export default ({
   include, exclude, loadStyles,
-  compilerOptions = {client: true, strict: true},
+  compilerOptions = defaultCompilerOptions,
 } = {}) => {
   const filter = createFilter(include || ['**/*.ejs'], exclude);
 
@@ -36,7 +37,7 @@ export default ({
     transform: function transform(code, tplFilePath) {
       if (filter(tplFilePath)) {
         const codeToCompile = loadStyles ? loadStylesTo(code, tplFilePath) : code;
-        const templateFn = compile(codeToCompile, compilerOptions);
+        const templateFn = compile(codeToCompile, Object.assign(defaultCompilerOptions, compilerOptions));
 
         return {
           code: `export default ${templateFn.toString()};`,
