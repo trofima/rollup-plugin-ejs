@@ -13,11 +13,11 @@ Construction
 ```javascript
 import tpl from './tpl.ejs';
 ```
-will return you function the execution result of [ejs.compile](https://github.com/mde/ejs#usage) function.
+By default will return you function the execution result of [ejs.compile](https://github.com/mde/ejs#usage) function.
 This function should be executed with data to return parsed html string.
 By default data goes to the 'locals' variable of the template (see following usage example).
 You can change ejs compiler [options](https://github.com/mde/ejs#options) when setting up the ejs rollup plugin.
-
+If you'll pass `render` option with `data` to the plugin, it will return you compiled html.
 
 rollup.config.js
 ```javascript
@@ -25,14 +25,18 @@ import { rollup } from 'rollup';
 import ejs from 'rollup-plugin-ejs';
 
 rollup({
-    entry: 'main.js',
-    plugins: [
-        ejs({
-            include: ['**/*.ejs', '**/*.html'], // optional, '**/*.ejs' by default
-            exclude: ['**/index.html'], // optional, undefined by default
-            compilerOptions: {client: true} // optional, any options supported by ejs compiler
-        })
-    ]
+  entry: 'main.js',
+  plugins: [
+    ejs({
+      include: ['**/*.ejs', '**/*.html'], // optional, '**/*.ejs' by default
+      exclude: ['**/index.html'], // optional, undefined by default
+      compilerOptions: {client: true}, // optional, any options supported by ejs compiler
+      render: { //optional, if passed, html string will be returned instead of template render function
+        data: {...}, //required, data to be rendered to html
+        minifierOptions: {...} //optional, [html-minifier](https://github.com/kangax/html-minifier) options, won't minify by default, if not passed
+      },
+    }),
+  ],
 });
 ```
 
