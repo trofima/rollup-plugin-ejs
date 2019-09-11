@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-ejs",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "ejs loader plugin for rollup.js",
   "author": "Serhii Trofimets <azarija@gmail.com>",
   "license": "MIT",
