@@ -17,6 +17,7 @@ By default will return you function the execution result of [ejs.compile](https:
 This function should be executed with data to return parsed html string.
 By default data goes to the 'locals' variable of the template (see following usage example).
 You can change ejs compiler [options](https://github.com/mde/ejs#options) when setting up the ejs rollup plugin.
+
 If you'll pass `render` option with `data` to the plugin, it will return you compiled html.
 
 rollup.config.js
