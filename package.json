@@ -10,7 +10,7 @@
     "ejs",
     "template"
   ],
-  "main": "dist/rollup-plugin-ejs.js",
+  "main": "src/index.js",
   "module": "dist/rollup-plugin-ejs.mjs",
   "repository": {
     "type": "git",
