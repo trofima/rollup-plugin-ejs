@@ -26,9 +26,10 @@ const loadStylesTo = (code, tplFilePath) =>
     ? `<style>${compilers[path.extname(href).substr(1)](tplFilePath, href)}</style>`
     : '');
 
-const renderCode = (templateFn, render) => {
+const renderCode = (templateFn, render, minifierOptions) => {
   if (render) {
-    const {data, minifierOptions} = render;
+    const {data, minifierOptions: minifierOptionsLegacy} = render;
+    minifierOptions = minifierOptions || minifierOptionsLegacy;
 
     return JSON.stringify(minifierOptions ? minify(templateFn(data), minifierOptions) : templateFn(data));
   }
@@ -37,7 +38,7 @@ const renderCode = (templateFn, render) => {
 };
 
 export default ({
-  include, exclude, loadStyles, render,
+  include, exclude, loadStyles, render, minifierOptions,
   compilerOptions = defaultCompilerOptions,
 } = {}) => {
   const filter = createFilter(include || ['**/*.ejs'], exclude);
@@ -48,10 +49,10 @@ export default ({
     transform: function transform(code, tplFilePath) {
       if (filter(tplFilePath)) {
         const codeToCompile = loadStyles ? loadStylesTo(code, tplFilePath) : code;
-        const templateFn = compile(codeToCompile, Object.assign(defaultCompilerOptions, compilerOptions));
+        const templateFn = compile(minifierOptions ? minify(codeToCompile, minifierOptions) : codeToCompile, Object.assign(defaultCompilerOptions, compilerOptions));
 
         return {
-          code: `export default ${renderCode(templateFn, render)};`,
+          code: `export default ${renderCode(templateFn, render, minifierOptions)};`,
           map: {mappings: ''},
         };
       }
