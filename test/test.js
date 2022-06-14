@@ -1,9 +1,11 @@
 import {describe, it} from 'mocha';
 import {rollup} from 'rollup';
 import {expect} from 'chai';
-import ejs from '..';
+import ejs from '../src/index.js';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-process.chdir(__dirname);
+process.chdir(dirname(fileURLToPath(import.meta.url)));
 
 describe('rollup-plugin-ejs', () => {
   function createBundle(sampleFileName = 'main', pluginSettings) {
@@ -14,7 +16,7 @@ describe('rollup-plugin-ejs', () => {
   }
 
   async function getExportedFrom(bundle) {
-    const {output: [{code}]} = await bundle.generate({format: 'cjs'});
+    const {output: [{code}]} = await bundle.generate({format: 'cjs', exports: 'default'});
     const module = {exports: {}};
     const fn = new Function('module', code);
 

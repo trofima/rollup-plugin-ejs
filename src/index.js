@@ -1,4 +1,4 @@
-import {createFilter} from 'rollup-pluginutils';
+import {createFilter} from '@rollup/pluginutils';
 import {compile} from 'ejs';
 import fs from 'fs';
 import path from 'path';

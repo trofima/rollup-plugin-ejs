@@ -2,6 +2,7 @@
   "name": "rollup-plugin-ejs",
   "version": "2.2.0",
   "description": "ejs loader plugin for rollup.js",
+  "type": "module",
   "author": "Serhii Trofimets <azarija@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/trofima/rollup-plugin-ejs",
@@ -10,8 +11,10 @@
     "ejs",
     "template"
   ],
-  "main": "dist/rollup-plugin-ejs.js",
-  "module": "dist/rollup-plugin-ejs.mjs",
+  "exports": {
+    "import": "./dist/rollup-plugin-ejs.js",
+    "require": "./dist/rollup-plugin-ejs.cjs"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/trofima/rollup-plugin-ejs.git"
@@ -25,24 +28,21 @@
   ],
   "scripts": {
     "pretest": "npm run build",
-    "test": "mocha test/*.js --require babel-polyfill  --require babel-register",
+    "test": "mocha test/*.js",
     "prebuild": "rm -rf dist/*",
     "build": "rollup -c"
   },
   "devDependencies": {
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.26.0",
-    "chai": "^4.2.0",
-    "mocha": "^6.2.0",
-    "rollup": "^1.21.0",
-    "rollup-plugin-babel": "^3.0.0",
-    "rollup-plugin-node-resolve": "^5.2.0"
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0",
+    "rollup": "^2.75.6"
   },
   "dependencies": {
-    "ejs": "^2.7.1",
+    "@rollup/pluginutils": "^4.2.1",
+    "ejs": "^3.1.8",
     "html-minifier": "^4.0.0",
-    "node-sass": "^4.12.0",
-    "rollup-pluginutils": "^2.8.1"
+    "node-sass": "^7.0.1"
   }
 }
