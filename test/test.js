@@ -2,8 +2,8 @@ import {describe, it} from 'mocha';
 import {rollup} from 'rollup';
 import {expect} from 'chai';
 import ejs from '../src/index.js';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import {fileURLToPath} from 'url';
+import {dirname} from 'path';
 
 process.chdir(dirname(fileURLToPath(import.meta.url)));
 
