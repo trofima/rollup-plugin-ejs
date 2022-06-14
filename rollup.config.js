@@ -6,7 +6,7 @@ const external = Object.keys(pkg.dependencies);
 export default {
   input: 'src/index.js',
   output: [
-    {file: pkg.exports.require, format: 'cjs', exports: 'default'},
+    {file: pkg.exports.require, format: 'cjs', exports: 'auto'},
     {file: pkg.exports.import, format: 'es'},
   ],
   plugins: [nodeResolve()],
