@@ -3,7 +3,6 @@ import {compile} from 'ejs';
 import fs from 'fs';
 import path from 'path';
 import * as sass from 'node-sass';
-import {minify} from 'html-minifier';
 
 const linkTagRegEx = /<link(?=.*\shref=['|"]([\w$-_.+!*'(),]*)['|"])(?=.*\srel=['|"]stylesheet['|"]).*>/g;
 const readStyleFile = (tplFilePath, href) => fs.readFileSync(path.resolve(path.parse(tplFilePath).dir, href), 'utf8');
@@ -21,20 +20,22 @@ const compilers = {
   },
 };
 
-const loadStylesTo = (code, tplFilePath) =>
-  code.replace(linkTagRegEx, (match, href) => href
+function loadStylesTo(code, tplFilePath) {
+  return code.replace(linkTagRegEx, (match, href) => href
     ? `<style>${compilers[path.extname(href).substr(1)](tplFilePath, href)}</style>`
     : '');
+}
 
-const renderCode = (templateFn, render) => {
+async function renderCode(templateFn, render) {
   if (render) {
     const {data, minifierOptions} = render;
+    const code = minifierOptions ? (await import('html-minifier')).minify(templateFn(data), minifierOptions) : templateFn(data);
 
-    return JSON.stringify(minifierOptions ? minify(templateFn(data), minifierOptions) : templateFn(data));
+    return JSON.stringify(code);
   }
 
   return templateFn.toString();
-};
+}
 
 export default ({
   include, exclude, loadStyles, render,
@@ -45,13 +46,13 @@ export default ({
   return {
     name: 'ejs',
 
-    transform: function transform(code, tplFilePath) {
+    transform: async function transform(code, tplFilePath) {
       if (filter(tplFilePath)) {
         const codeToCompile = loadStyles ? loadStylesTo(code, tplFilePath) : code;
         const templateFn = compile(codeToCompile, Object.assign(defaultCompilerOptions, compilerOptions));
 
         return {
-          code: `export default ${renderCode(templateFn, render)};`,
+          code: `export default ${await renderCode(templateFn, render)};`,
           map: {mappings: ''},
         };
       }
