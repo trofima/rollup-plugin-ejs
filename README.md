@@ -3,13 +3,22 @@
 
 Supports loading of any files with proper ejs content.
 
+> **Breaking changes in v4**<br>
+>* `node-sass` and `html-minifier` moved to `peerDependencies`
+>* `loadStyles` option renamed to `inlineStyles`
+
 ## Installation
 ```
 npm install rollup-plugin-ejs --save
 ```
 
-> **NOTE:**
-If you are going to use `inlineStyles` option with sass support, you have to install `node-sass` to your project, since this plugin has it as `peerDependency`.
+> **NOTE:**<br>
+This plugin depends on `node-sass` module for supporting `inlineStyles` option and `html-minifier` module for supporting `render.minifierOptions` (see `peerDependencies` in `package.json`).
+So if you are going to use those options, don't forget to install relevant dependencies.
+Otherwise you can ignore npm installation warning about missing peer dependencies for this module.
+
+> **NOTE:**<br>
+If you are bundling code with `rollup` in `es` format, keep in mind that since this plugin dynamically imports peer dependencies, your node version should support `import()` feature (node 13.2.0+).
 
 ## Usage
 Construction
@@ -62,16 +71,19 @@ tpl.ejs
 
 ## Advanced options
 
+### inlineStyles: Boolean
+
+Inlines content of files connected by `<link rel="stylesheet>` tags to `<style>...</style>` tags in a template.<br>
+
 It might be useful first of all for those are using [webcomponents.js](https://github.com/webcomponents/polyfills/tree/master/packages/webcomponentsjs).
 By the webcomponents spec v1 you can use ```<link rel="stylesheet" href="...">``` tags in your shadow dom to load styles. 
 But unfortunately not all browsers support this.
-[ShadyCSS](https://github.com/webcomponents/polyfills/tree/master/packages/shadycss) doesn't help here, because it works only for <style>...</style> tags in your shadow dom.
+[ShadyCSS](https://github.com/webcomponents/polyfills/tree/master/packages/shadycss) doesn't help here, because it works only for `<style>...</style>` tags in your shadow dom.
 So for ShadyCSS to process your styles loaded by link tags you have to replace ```<link>``` tags with ```<style>``` tags containing css rules from linked css file.
-To achieve this on loading a template ejs/html file you can use this plugin:
+To achieve this on loading a template ejs/html file you can use `inlineStyles` option:
 
-**Starting from v2 you can also use link to ```.scss``` files instead of ```.css``` directly! ```.scss``` will be compiled on the fly and appended to the ```<style>``` as regular css! So you don't need to compile sass separately anymore.**
-
-_Note: there is a breaking change in v2 ```loadCss``` option renamed to load ```inlineStyles```._
+>**NOTE**<br>
+Starting from v2 you can also use link to ```.scss``` files instead of ```.css``` directly! ```.scss``` will be compiled on the fly and appended to the ```<style>``` as regular css! So you don't need to compile sass separately anymore.
 
 rollup.config.js
 ```javascript
