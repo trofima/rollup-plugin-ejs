@@ -22,7 +22,7 @@ const compilers = {
 
 function loadStylesTo(code, tplFilePath) {
   return code.replace(linkTagRegEx, (match, href) => href
-    ? `<style>${compilers[path.extname(href).substr(1)](tplFilePath, href)}</style>`
+    ? `<style>${compilers[path.extname(href).substring(1)](tplFilePath, href)}</style>`
     : '');
 }
 
