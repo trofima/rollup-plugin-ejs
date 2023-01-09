@@ -2,7 +2,7 @@ import {createFilter} from '@rollup/pluginutils';
 import {compile} from 'ejs';
 import fs from 'fs';
 import path from 'path';
-import sass from 'node-sass';
+import * as sass from 'node-sass';
 import {minify} from 'html-minifier';
 
 const linkTagRegEx = /<link(?=.*\shref=['|"]([\w$-_.+!*'(),]*)['|"])(?=.*\srel=['|"]stylesheet['|"]).*>/g;
