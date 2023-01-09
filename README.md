@@ -9,7 +9,7 @@ npm install rollup-plugin-ejs --save
 ```
 
 > **NOTE:**
-If you are going to use `loadStyles` option with sass support, you have to install `node-sass` to your project, since this plugin has it as `peerDependency`.
+If you are going to use `inlineStyles` option with sass support, you have to install `node-sass` to your project, since this plugin has it as `peerDependency`.
 
 ## Usage
 Construction
@@ -71,7 +71,7 @@ To achieve this on loading a template ejs/html file you can use this plugin:
 
 **Starting from v2 you can also use link to ```.scss``` files instead of ```.css``` directly! ```.scss``` will be compiled on the fly and appended to the ```<style>``` as regular css! So you don't need to compile sass separately anymore.**
 
-_Note: there is a breaking change in v2 ```loadCss``` option renamed to load ```loadStyles```._
+_Note: there is a breaking change in v2 ```loadCss``` option renamed to load ```inlineStyles```._
 
 rollup.config.js
 ```javascript
@@ -83,7 +83,7 @@ rollup({
     plugins: [
       ejs({
         include: ['**/*.ejs', '**/*.html'],
-        loadStyles: true, // false by default
+        inlineStyles: true, // false by default
       }),
     ],
 });

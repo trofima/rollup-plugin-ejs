@@ -20,7 +20,7 @@ const compilers = {
   },
 };
 
-function loadStylesTo(code, tplFilePath) {
+function inlineStylesTo(code, tplFilePath) {
   return code.replace(linkTagRegEx, (match, href) => href
     ? `<style>${compilers[path.extname(href).substring(1)](tplFilePath, href)}</style>`
     : '');
@@ -38,7 +38,7 @@ async function renderCode(templateFn, render) {
 }
 
 export default ({
-  include, exclude, loadStyles, render,
+  include, exclude, inlineStyles, render,
   compilerOptions = defaultCompilerOptions,
 } = {}) => {
   const filter = createFilter(include || ['**/*.ejs'], exclude);
@@ -48,7 +48,7 @@ export default ({
 
     transform: async function transform(code, tplFilePath) {
       if (filter(tplFilePath)) {
-        const codeToCompile = loadStyles ? loadStylesTo(code, tplFilePath) : code;
+        const codeToCompile = inlineStyles ? inlineStylesTo(code, tplFilePath) : code;
         const templateFn = compile(codeToCompile, Object.assign(defaultCompilerOptions, compilerOptions));
 
         return {

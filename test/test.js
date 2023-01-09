@@ -52,7 +52,7 @@ describe('rollup-plugin-ejs', () => {
     });
 
     it('should replace link[rel="stylesheet"] without href to empty string', async () => {
-      const bundle = await createBundle('cssLoading/oneLinkTag', {loadStyles: true});
+      const bundle = await createBundle('cssLoading/oneLinkTag', {inlineStyles: true});
       const tplFn = await getExportedFrom(bundle);
 
       expect(removeSpacesFrom(tplFn({test: 'test_value'})))
@@ -60,7 +60,7 @@ describe('rollup-plugin-ejs', () => {
     });
 
     it('should replace multiple link[rel="stylesheet"] without href to empty string', async () => {
-      const bundle = await createBundle('cssLoading/multipleLinkTags', {loadStyles: true});
+      const bundle = await createBundle('cssLoading/multipleLinkTags', {inlineStyles: true});
       const tplFn = await getExportedFrom(bundle);
 
       expect(removeSpacesFrom(tplFn({test: 'test_value'})))
@@ -93,7 +93,7 @@ describe('rollup-plugin-ejs', () => {
 
   describe('css styles loading', () => {
     it('should load css rules from linked css file to style tag', async () => {
-      const bundle = await createBundle('cssLoading/loadCssRules', {loadStyles: true});
+      const bundle = await createBundle('cssLoading/loadCssRules', {inlineStyles: true});
       const tplFn = await getExportedFrom(bundle);
 
       expect(removeSpacesFrom(tplFn()))
@@ -101,7 +101,7 @@ describe('rollup-plugin-ejs', () => {
     });
 
     it('should load css rules from multiple linked css files to style tags', async () => {
-      const bundle = await createBundle('cssLoading/loadMultipleCssRules', {loadStyles: true});
+      const bundle = await createBundle('cssLoading/loadMultipleCssRules', {inlineStyles: true});
       const tplFn = await getExportedFrom(bundle);
 
       expect(removeSpacesFrom(tplFn()))
@@ -114,7 +114,7 @@ describe('rollup-plugin-ejs', () => {
 
   describe('sass styles loading', () => {
     it('should load and compile css rules from linked scss file to style tag', async () => {
-      const bundle = await createBundle('sassLoading/loadSassRules', {loadStyles: true});
+      const bundle = await createBundle('sassLoading/loadSassRules', {inlineStyles: true});
       const tplFn = await getExportedFrom(bundle);
 
       expect(removeSpacesFrom(tplFn()))
@@ -122,7 +122,7 @@ describe('rollup-plugin-ejs', () => {
     });
 
     it('should load and compile css rules from multiple linked scss files to style tags', async () => {
-      const bundle = await createBundle('sassLoading/loadMultipleSassRules', {loadStyles: true});
+      const bundle = await createBundle('sassLoading/loadMultipleSassRules', {inlineStyles: true});
       const tplFn = await getExportedFrom(bundle);
 
       expect(removeSpacesFrom(tplFn()))
@@ -133,7 +133,7 @@ describe('rollup-plugin-ejs', () => {
     });
 
     it('should correctly resolve and load sass imports for multiple nesting levels', async () => {
-      const bundle = await createBundle('sassLoading/nested/nested1/loadSassRules', {loadStyles: true});
+      const bundle = await createBundle('sassLoading/nested/nested1/loadSassRules', {inlineStyles: true});
       const tplFn = await getExportedFrom(bundle);
 
       expect(removeSpacesFrom(tplFn()))
@@ -141,7 +141,7 @@ describe('rollup-plugin-ejs', () => {
     });
 
     it('should load and compile mixed css rules from multiple linked css and scss files to style tags', async () => {
-      const bundle = await createBundle('sassLoading/loadMultipleMixedRules', {loadStyles: true});
+      const bundle = await createBundle('sassLoading/loadMultipleMixedRules', {inlineStyles: true});
       const tplFn = await getExportedFrom(bundle);
 
       expect(removeSpacesFrom(tplFn()))
