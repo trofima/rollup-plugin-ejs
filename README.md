@@ -8,6 +8,9 @@ Supports loading of any files with proper ejs content.
 npm install rollup-plugin-ejs --save
 ```
 
+> **NOTE:**
+If you are going to use `loadStyles` option with sass support, you have to install `node-sass` to your project, since this plugin has it as `peerDependency`.
+
 ## Usage
 Construction
 ```javascript
