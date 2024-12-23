@@ -4,7 +4,7 @@
 Supports loading of any files with proper ejs content.
 
 > **Breaking changes in v4**<br>
->* `node-sass` and `html-minifier` moved to `peerDependencies`
+>* `sass` and `html-minifier` moved to `peerDependencies`
 >* `loadStyles` option renamed to `inlineStyles`
 
 ## Installation
@@ -13,7 +13,7 @@ npm install rollup-plugin-ejs --save
 ```
 
 > **NOTE:**<br>
-This plugin depends on `node-sass` module for supporting `inlineStyles` option and `html-minifier` module for supporting `render.minifierOptions` (see `peerDependencies` in `package.json`).
+This plugin depends on `sass` module for supporting `inlineStyles` option and `html-minifier` module for supporting `render.minifierOptions` (see `peerDependencies` in `package.json`).
 So if you are going to use those options, don't forget to install relevant dependencies.
 Otherwise you can ignore npm installation warning about missing peer dependencies for this module.
 

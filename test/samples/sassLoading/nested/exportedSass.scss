@@ -1,5 +1,7 @@
-@import "../exportedVars";
+@forward "../exportedVars";
+@use "../exportedVars" as vars;
 
 * {
-  border: $border-size;
+  border: vars.$border-size;
 }
+

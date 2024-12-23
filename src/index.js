@@ -9,13 +9,9 @@ const defaultCompilerOptions = {client: true, strict: true}
 const compilers = {
   css: readStyleFile,
   scss: async (tplFilePath, href) => {
-    const {default: {renderSync}} = await import('node-sass')
-    const compiled = renderSync({
-      data: await readStyleFile(tplFilePath, href),
-      importer: (url, prev) =>({
-        file: path.resolve(path.parse(prev === 'stdin' ? tplFilePath : prev).dir, url)
-      }),
-    })
+    const {default: {compile}} = await import('sass')
+    const sassFilePath = path.resolve(path.parse(tplFilePath).dir, href)
+    const compiled = await compile(sassFilePath)
 
     return compiled.css.toString('utf8')
   },
