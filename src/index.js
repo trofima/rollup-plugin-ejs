@@ -9,7 +9,7 @@ const defaultCompilerOptions = {client: true, strict: true}
 const compilers = {
   css: readStyleFile,
   scss: async (tplFilePath, href) => {
-    const {default: {compile}} = await import('sass')
+    const {compile} = await import('sass')
     const sassFilePath = path.resolve(path.parse(tplFilePath).dir, href)
     const compiled = await compile(sassFilePath)
 

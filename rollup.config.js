@@ -1,6 +1,6 @@
 import nodeResolve from '@rollup/plugin-node-resolve';
+import pkg from './package.json' with { type: 'json' }
 
-const pkg = require('./package.json');
 const external = [...Object.keys(pkg.peerDependencies), ...Object.keys(pkg.dependencies)];
 
 export default {
